@@ -1,0 +1,14 @@
+FROM maven:3.8.3-openjdk-17
+#RUN apk update && apk upgrade #Updating and upgrading packages to remove vulnerabilities
+
+ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+ENV APP_DOMAIN=${APP_DOMAIN}
+ENV DOMAIN=${DOMAIN}
+
+WORKDIR /usr/src/maven
+COPY pom.xml .
+COPY src/ /usr/src/maven/src/
+COPY entrypoints/ /usr/src/maven/entrypoints/
+RUN chmod +x /usr/src/maven/entrypoints/docker-entrypoint.sh
+RUN groupadd -g 1001 rails && useradd -u 1001 rails -g rails
+ENTRYPOINT ["./entrypoints/docker-entrypoint.sh"]
